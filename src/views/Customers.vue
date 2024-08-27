@@ -7,6 +7,7 @@
     import { customerService } from '../services/customersServices';
     import { productService } from '../services/productsServices';
     import { Customer } from '@/models/Customers';
+    import { Tooltip } from 'bootstrap';
 
     const name = ref('');
     const address = ref('');
@@ -15,10 +16,14 @@
     let customers = ref<Customer[]>([]);
     let products = ref<Product[]>([]);
     let selectedCustomer = ref<Customer | null>(null);
+    const tooltipButton = ref<HTMLElement | null>(null);
 
     onMounted(() => {
-      getCustomers();
-      getProducts();
+        if (tooltipButton.value) {
+            new Tooltip(tooltipButton.value);
+        }
+        getCustomers();
+        getProducts();
     });
 
     async function handleSubmit() {
@@ -28,6 +33,7 @@
                 address: address.value,
                 coordinates: coordinates.value,
                 product: product.value,
+                status: 'ACTIVO'
             };
 
             if (selectedCustomer.value?.id) {
@@ -71,6 +77,19 @@
         product.value = customer.product
     }
 
+    async function editStatus(id: number, status: string) {
+        try {
+            if(status == "ACTIVO") status = "INACTIVO";
+            else status = "ACTIVO";
+
+            await customerService.editStatus(id, status);
+            await getCustomers();
+        } catch (error) {
+            toast.error(`Error al cambiar el estado del cliente ${name.value}.`);
+        }
+        // toast.success(`El estado del cliente ${name.value} ha sido cambiado exitosamente`);
+    }
+
     async function deleteCustomer(id: number) {
         try {
             await customerService.deleteCustomer(id);
@@ -111,7 +130,11 @@
 <template>
     <h1 class="Nunito">Clientes</h1>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn-blue py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal" type="button">Agregar</button>
+        <button type="button" class="btn btn-primary py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal">
+            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" ref="tooltipButton">
+                <i class="fa-solid fa-circle-plus"></i>
+            </div>
+        </button>
     </div>
     <div class="container mt-2">
         <div class="table-responsive">
@@ -122,6 +145,7 @@
                         <th scope="col">Dirección</th>
                         <th scope="col">Coordenadas</th>
                         <th scope="col">Producto</th>
+                        <th scope="col">Estatus</th>
                         <th scope="col" class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -131,9 +155,18 @@
                         <td>{{ customer.address }}</td>
                         <td>{{ customer.coordinates }}</td>
                         <td>{{ customer.product }}</td>
+                        <td>
+                            <button :class="['btn-sm', 'me-2', customer.status == 'ACTIVO' ? 'btn-green' : 'btn-gray']"
+                                @click="editStatus(customer.id || 0, customer.status)">{{ customer.status }}
+                            </button>
+                        </td>
                         <td class="text-center">
-                            <button class="btn-yellow btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">Editar</button>
-                            <button v-if="customer.id" class="btn-red btn-sm" @click="deleteCustomer(customer.id)">Eliminar</button>
+                            <button class="btn-yellow btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">
+                                Editar
+                            </button>
+                            <button v-if="customer.id" type="button" class="btn-red btn-sm" @click="deleteCustomer(customer.id)">
+                                Eliminar
+                            </button>
                         </td>
                     </tr>
                     <tr v-else>

@@ -37,6 +37,10 @@ export const customerService = {
     await axios.put(`${API_URL}/${id}`, customer);
   },
 
+  async editStatus(id: number, status: string): Promise<void> {
+    await axios.patch(`${API_URL}/status/${id}/${status}`);
+  },
+
   async deleteCustomer(id: number): Promise<void> {
     await axios.delete(`${API_URL}/${id}`);
   },

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Home from '../views/Home.vue';
+// import Home from '../views/Home.vue';
 import Login from '../views/auth/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
 import Reports from '../views/Reports.vue';
@@ -7,13 +7,15 @@ import Customers from '../views/Customers.vue';
 import Admin from '../views/Admin.vue';
 import Products from '../views/Products.vue';
 import Register from '@/views/auth/Register.vue';
+import RecoverPassword from '@/views/auth/RecoverPassword.vue';
+import ResetPassword from '@/views/auth/ResetPassword.vue';
 import { useAuth } from '../composables/useAuth';
 
 const routes: Array<RouteRecordRaw> = [
   { 
     path: '/',
     name: 'Home',
-    component: Home
+    redirect: '/login'
   },
   { 
     path: '/login',
@@ -24,6 +26,17 @@ const routes: Array<RouteRecordRaw> = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/recover-password',
+    name: 'Recover Password',
+    component: RecoverPassword
+    // component: () => import('../views/auth/RecoverPassword.vue')
+  },
+  {
+    path: '/reset-password',
+    name: 'Reset Password',
+    component: ResetPassword
   },
   { 
     path: '/admin',

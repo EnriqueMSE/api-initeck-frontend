@@ -5,4 +5,5 @@ export interface Customer {
     address: string;
     coordinates: string;
     product: string;
+    status: string;
 }
