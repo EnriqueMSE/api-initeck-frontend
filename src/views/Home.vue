@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <nav class="navbar bg-body-tertiary sticky-top">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
@@ -150,4 +150,4 @@ import { User } from '@/models/Auth';
   .fa-solid, .custom-link {
     color: #818094;
   }
-</style>
+</style> -->

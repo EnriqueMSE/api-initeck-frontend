@@ -20,6 +20,7 @@
     "vue3-toastify": "^0.2.2"
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
     "@types/node": "^22.2.0",
     "@types/vue": "^2.0.0",
     "@vitejs/plugin-vue": "^5.1.2",

@@ -49,3 +49,19 @@
     border: none;
     cursor: pointer;
 }
+
+.btn-green {
+    background-color: #28a745;
+    color: white;
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-gray {
+    background-color: gray;
+    color: white;
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+}
