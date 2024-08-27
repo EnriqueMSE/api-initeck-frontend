@@ -15,7 +15,8 @@
           <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
         </form>
       </div>
-      <router-link class="text-center mt-5 custom-link" to="/register">Registrarse</router-link>
+      <router-link class="text-center mt-3 custom-link" to="/recover-password">Recuperar contraseña</router-link>
+      <router-link class="text-center mt-2 custom-link" to="/register">Registrarse</router-link>
     </div>
   </div>
 </template>

@@ -30,7 +30,7 @@
   import axios from 'axios';
   import { toast } from 'vue3-toastify';
   import { authService } from '../../services/authServices';
-import { User } from '@/models/Auth';
+  import { User } from '@/models/Auth';
   
   const email = ref('');
   const password = ref('');
@@ -61,6 +61,5 @@ import { User } from '@/models/Auth';
   </script>
   
   <style scoped>
-  /* Aquí puedes añadir estilos personalizados si es necesario */
   </style>
   
