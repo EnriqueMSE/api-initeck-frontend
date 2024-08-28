@@ -128,14 +128,18 @@
 </script>
 
 <template>
-    <h1 class="Nunito">Clientes</h1>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button type="button" class="btn btn-primary py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal">
-            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" ref="tooltipButton">
-                <i class="fa-solid fa-circle-plus"></i>
-            </div>
-        </button>
-    </div>
+    <nav class="navbar navbar-light lato-regular">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><h3><i class="fa-solid fa-person-circle-check"></i>&nbsp;Clientes</h3></a>
+            <form class="d-flex justify-content-md-end">
+                <button type="button" class="btn btn-success py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal" >                    
+                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Cliente" ref="tooltipButton">
+                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
+                    </div>
+                </button>
+            </form>
+        </div>    
+    </nav>
     <div class="container mt-2">
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -156,16 +160,32 @@
                         <td>{{ customer.coordinates }}</td>
                         <td>{{ customer.product }}</td>
                         <td>
-                            <button :class="['btn-sm', 'me-2', customer.status == 'ACTIVO' ? 'btn-green' : 'btn-gray']"
-                                @click="editStatus(customer.id || 0, customer.status)">{{ customer.status }}
-                            </button>
+                            <div class="form-check form-switch" v-if="customer.status = 'ACTIVO'">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked @click="editStatus(customer.id || 0, customer.status)">
+                                
+                                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                            </div>
+                            <div class="form-check form-switch" v-else>
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" @click="editStatus(customer.id || 0, customer.status)">
+                                
+                                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                            </div>
                         </td>
+                            <!-- <small>
+                            <button :class="['badge rounded-pill', '', customer.status == 'ACTIVO' ? 'bg-success' : 'bg-danger']"
+                                @click="editStatus(customer.id || 0, customer.status)">{{ customer.status }}
+                            </button></small> -->
+
                         <td class="text-center">
-                            <button class="btn-yellow btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">
-                                Editar
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">
+                                    <i class="fa-solid fa-pen-to-square text-info"></i>
+                                </div>
                             </button>
-                            <button v-if="customer.id" type="button" class="btn-red btn-sm" @click="deleteCustomer(customer.id)">
-                                Eliminar
+                            <button v-if="customer.id" type="button" class="btn btn-sm" @click="deleteCustomer(customer.id)">
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
+                                    <i class="fa-solid fa-trash text-danger"></i>
+                                </div>
                             </button>
                         </td>
                     </tr>
@@ -201,7 +221,7 @@
                             <label for="coordinates" class="form-label">Coordenadas</label>
                             <div class="input-group">
                                 <input type="text" id="coordinates" v-model="coordinates" class="form-control" readonly />
-                                <button type="button" class="btn btn-secondary" @click="getLocation">Obtener Ubicación</button>
+                                <button type="button" class="btn btn-warning" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener Ubicación</button>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -213,7 +233,7 @@
                             </select>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn-blue">Guardar</button>
+                            <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                         </div>
                     </form>
                 </div>
