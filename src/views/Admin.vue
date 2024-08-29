@@ -31,16 +31,18 @@ async function getMostFrequentProducts() {
 </script>
 
 <template>
-    <h1 class="Nunito">Dashboard</h1>
+    <h1 class="lato-regular">Dashboard</h1>
     <div class="row">
         <div class="col-md-4">
             <div class="card d-flex justify-content-center">
-                <div class="card-body">
-                    <p class="text-center">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </p>
-                    <p class="text-center Nunito">Cliente activos</p>
-                    <p class="Nunito text-center">{{ count_customers }}</p>
+                <div class="callout callout-info">
+                    <div class="card-body">
+                        <p class="text-center">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </p>
+                        <p class="text-center lato-bold">Cliente activos</p>
+                        <p class="lato-regular text-center">{{ count_customers }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,8 +52,8 @@ async function getMostFrequentProducts() {
                     <p class="text-center">
                         <i class="fa-solid fa-user-minus"></i>
                     </p>
-                    <p class="text-center Nunito">Clientes inactivos</p>
-                    <p class="text-center Nunito">2</p>
+                    <p class="text-center lato-bold">Clientes inactivos</p>
+                    <p class="text-center lato-regular">2</p>
                 </div>
             </div>
         </div>
@@ -61,8 +63,8 @@ async function getMostFrequentProducts() {
                     <p class="text-center">
                         <i class="fa-solid fa-cubes"></i>
                     </p>
-                    <p class="text-center Nunito">Producto mas vendido</p>
-                    <p class="text-center Nunito">{{ best_seller }}</p>
+                    <p class="text-center lato-bold">Producto mas vendido</p>
+                    <p class="text-center lato-regular">{{ best_seller }}</p>
                 </div>
             </div>
         </div>

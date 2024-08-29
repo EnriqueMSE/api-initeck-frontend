@@ -130,9 +130,9 @@
 <template>
     <nav class="navbar navbar-light lato-regular">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><h3><i class="fa-solid fa-person-circle-check"></i>&nbsp;Clientes</h3></a>
+            <a class="navbar-brand mb-0 h1"><h3><i class="fa-solid fa-person-circle-check"></i>&nbsp;Clientes</h3></a>
             <form class="d-flex justify-content-md-end">
-                <button type="button" class="btn btn-success py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal" >                    
+                <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal" >                    
                     <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Cliente" ref="tooltipButton">
                         <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
                     </div>
@@ -159,15 +159,13 @@
                         <td>{{ customer.address }}</td>
                         <td>{{ customer.coordinates }}</td>
                         <td>{{ customer.product }}</td>
-                        <td>
-                            <div class="form-check form-switch" v-if="customer.status = 'ACTIVO'">
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked @click="editStatus(customer.id || 0, customer.status)">
-                                
+                        <td>                           
+                            <div class="form-check form-switch" v-if="customer.status == 'ACTIVO'">
+                                <input class="form-check-input bg-success" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked @click="editStatus(customer.id || 0, customer.status)">                               
                                 <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                             </div>
                             <div class="form-check form-switch" v-else>
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" @click="editStatus(customer.id || 0, customer.status)">
-                                
+                                <input class="form-check-input bg-danger" type="checkbox" role="switch" id="flexSwitchCheckDefault" @click="editStatus(customer.id || 0, customer.status)">                               
                                 <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                             </div>
                         </td>
@@ -221,7 +219,7 @@
                             <label for="coordinates" class="form-label">Coordenadas</label>
                             <div class="input-group">
                                 <input type="text" id="coordinates" v-model="coordinates" class="form-control" readonly />
-                                <button type="button" class="btn btn-warning" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener Ubicación</button>
+                                <button type="button" class="btn btn-warning btn-sm" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener Ubicación</button>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -233,7 +231,7 @@
                             </select>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                            <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-floppy-disk fa-sm"></i> Guardar</button>
                         </div>
                     </form>
                 </div>
