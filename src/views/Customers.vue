@@ -130,7 +130,7 @@
 <template>
     <nav class="navbar navbar-light lato-regular">
         <div class="container-fluid">
-            <a class="navbar-brand mb-0 h1"><h3><i class="fa-solid fa-person-circle-check"></i>&nbsp;Clientes</h3></a>
+            <a class="navbar-brand mb-0 h1"><h3><i class="fa-solid fa-person"></i>&nbsp;Clientes</h3></a>
             <form class="d-flex justify-content-md-end">
                 <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal" >                    
                     <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Cliente" ref="tooltipButton">

@@ -10,21 +10,20 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="content">
-    <div class="row">
-      <div class="col-md-2">
+    <div class="row" style="width: 100%;">
+      <div class="col-sm-2">
         <Sidebar />
       </div>
-      <div class="col-md-10">
+      <div class="col-sm-10">
         <router-view></router-view>
       </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
- .col-md-10 {
-    padding: 2rem;
-    background-color: #dfdfdf;
+ .col-sm-10 {
+    padding:2rem;
+    background-image: url("/img/bg.png");
+    background-size:cover;
   }
 </style>

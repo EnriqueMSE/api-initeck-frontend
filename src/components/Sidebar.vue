@@ -10,7 +10,7 @@ import { authService } from '@/services/authServices';
 
 <template>
   <div class="container">
-    <img src="/img/Ichtus-48.png" alt="Avatar" class="avatar">
+    <img src="/img/initeck.png" alt="Avatar" class="avatar">
     <ul class="nav flex-column">
       <li class="nav-item">
         <i class="fa-solid fa-gauge"></i>&nbsp;
@@ -48,26 +48,29 @@ import { authService } from '@/services/authServices';
 
 <style scoped>
   .container {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     height: 100vh;
   }
 
   .avatar {
     vertical-align: middle;
-    width: 50px;
+    width: 90%;
     height: 50px;
-    border-radius: 50%;
+    padding: 10px;
+    /* border-radius: 50%; */
   }
 
   .custom-link {
     text-decoration: none;
-    font-family: Nunito;
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-style: normal;
     font-size: 16px;
     line-height: 3rem;
   }
 
   .fa-solid, .custom-link {
-    color: #818094;
+    color: #133E6C;
     cursor: pointer;
   }
   summary.no-arrow {

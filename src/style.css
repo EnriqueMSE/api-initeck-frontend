@@ -130,7 +130,9 @@
   margin: 20px 0;
   border: 1px solid #eee;
   border-left-width: 5px;
-  border-radius: 3px;
+  border-radius: 5px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 5px 5px 5px rgb(102, 100, 100);
   h4 {
     margin-top: 0;
     margin-bottom: 5px;
@@ -145,6 +147,24 @@
     margin-top: -5px;
   }
 }
+
+.fa-opacity {
+  opacity: 0.5;            
+  color: rgba(0, 0, 0, 0.75); 
+}
+.callout-danger{
+  border-left-color: #d9534f;
+}
+
+.callout-success{
+  border-left-color: #5cb85c;  
+}
+
+.callout-warning{
+  border-left-color: #f0ad4e;  
+}
+
+
 
 /* @each $name,$color in (default,#777),(primary,#428bca),(success,#5cb85c),(danger,#d9534f),(warning,#f0ad4e),(info,#5bc0de), (bdc,#29527a) {
   .callout-#{$name} {
