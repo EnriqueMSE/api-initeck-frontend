@@ -10,7 +10,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="row" style="width: 100%;">
+    <div class="row">
       <div class="col-sm-2">
         <Sidebar />
       </div>
@@ -18,11 +18,12 @@ export default defineComponent({
         <router-view></router-view>
       </div>
     </div>
+
 </template>
 
 <style scoped>
  .col-sm-10 {
-    padding:2rem;
+    padding: 2rem;
     background-image: url("/img/bg.png");
     background-size:cover;
   }

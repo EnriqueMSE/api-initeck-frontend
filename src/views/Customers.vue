@@ -208,23 +208,29 @@
                 <div class="modal-body">
                     <form @submit.prevent="handleSubmit">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nombre</label>
-                            <input type="text" id="name" v-model="name" class="form-control" required />
+                            <label for="name" class="login__field">Nombre</label>
+                            <input type="text" id="name" v-model="name" class="login__input" required />
                         </div>
                         <div class="mb-3">
-                            <label for="address" class="form-label">Dirección</label>
-                            <input type="text" id="address" class="form-control" v-model="address" required>
+                            <label for="address" class="login__field">Dirección</label>
+                            <input type="text" id="address" class="login__input" v-model="address" required>
                         </div>
                         <div class="mb-3">
-                            <label for="coordinates" class="form-label">Coordenadas</label>
-                            <div class="input-group">
-                                <input type="text" id="coordinates" v-model="coordinates" class="form-control" readonly />
-                                <button type="button" class="btn btn-warning btn-sm" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener Ubicación</button>
+                            <div class="row">
+                                <div class="col-sm-8">
+<label for="coordinates" class="login__field">Ubicacion</label>
+                                <input type="text" id="coordinates" v-model="coordinates" class="login__input" readonly/>  
+                                </div>
+                                <div class="col-sm-4 d-flex align-items-end">
+<button type="button" class="btn btn-warning btn-sm" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener</button>
+                                </div>
                             </div>
+                                 
+                                       
                         </div>
                         <div class="mb-3">
-                            <label for="product" class="form-label">Producto</label>
-                            <select name="product" v-model="product" class="form-control" id="product" required>
+                            <label for="product" class="login__field">Producto</label>
+                            <select name="product" v-model="product" class="login__input" id="product" required>
                                 <option v-for="(product, index) in products" :key="index" :value="product.name">
                                     {{ product.name }}
                                 </option>

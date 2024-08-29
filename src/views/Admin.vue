@@ -31,7 +31,7 @@ async function getMostFrequentProducts() {
 </script>
 
 <template>
-    <h1 class="lato-regular">Dashboard</h1>
+    <h1>Dashboard</h1>
     <div class="row">
         <div class="col-md-4">
                 <div class="callout callout-success d-flex justify-content-center">
@@ -42,7 +42,7 @@ async function getMostFrequentProducts() {
                             </h1>
                         </div>
                         <div class="col-sm-6">
-                            <h4 class="text-center lato-bold">Clientes Activos</h4>
+                            <h4 class="text-center">Clientes Activos</h4>
                         </div>
                         <div class="col-sm-4">
                             <h1 class="lato-regular text-center text-info text-wb">{{ count_customers }}</h1>
@@ -59,7 +59,7 @@ async function getMostFrequentProducts() {
                         </h1>
                     </div>
                     <div class="col-sm-6">
-                        <h4 class="text-center lato-bold">Clientes Inactivos</h4>
+                        <h4 class="text-center">Clientes Inactivos</h4>
                     </div>
                     <div class="col-sm-4">
                         <h1 class="lato-regular text-center text-info text-wb">0</h1>
@@ -76,7 +76,7 @@ async function getMostFrequentProducts() {
                         </h1>
                     </div>
                     <div class="col-sm-6">
-                        <h5 class="text-center lato-bold">Producto Más Vendido</h5>
+                        <h5 class="text-center">Producto Más Vendido</h5>
                     </div>
                     <div class="col-sm-4">
                         <h3 class="lato-regular text-center text-info text-wb">{{best_seller}}</h3>
