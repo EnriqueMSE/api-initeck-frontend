@@ -18,9 +18,13 @@ export const customerService = {
     return response.data.count;
   },
 
+  async getCountInactive(): Promise<number> {
+    const response = await axios.get(`${API_URL}/inactive_count`);
+    return response.data.count;
+  },
+
   async getMostFrequentProducts(): Promise<string> {
     const response = await axios.get(`${API_URL}/most_frequent_products`);
-    console.log(response.data);
     return response.data;
   },
 

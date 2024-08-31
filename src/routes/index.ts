@@ -10,6 +10,7 @@ import Register from '@/views/auth/Register.vue';
 import RecoverPassword from '@/views/auth/RecoverPassword.vue';
 import ResetPassword from '@/views/auth/ResetPassword.vue';
 import { useAuth } from '../composables/useAuth';
+import Transactions from '@/views/Transactions.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { 
@@ -54,10 +55,15 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Productos',
         component: Products
       },
-      { 
+      {
         path: 'reportes',
         name: 'Reportes',
         component: Reports
+      },
+      { 
+        path: 'movimientos',
+        name: 'Movimientos',
+        component: Transactions
       },
       {
         path: 'clientes',

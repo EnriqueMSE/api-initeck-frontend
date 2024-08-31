@@ -8,15 +8,25 @@
     import { productService } from '../services/productsServices';
     import { Customer } from '@/models/Customers';
     import { Tooltip } from 'bootstrap';
+    import { computed } from 'vue';
 
+    // Form inputs
     const name = ref('');
     const address = ref('');
     const coordinates = ref('');
     const product = ref('');
+    // Arrays
     let customers = ref<Customer[]>([]);
     let products = ref<Product[]>([]);
+    // Selected customer
     let selectedCustomer = ref<Customer | null>(null);
+    // Tooltip
     const tooltipButton = ref<HTMLElement | null>(null);
+    // search filter
+    const searchQuery = ref('');
+    // Paginate
+    const currentPage = ref(1);
+    const itemsPerPage = ref(5);
 
     onMounted(() => {
         if (tooltipButton.value) {
@@ -35,7 +45,6 @@
                 product: product.value,
                 status: 'ACTIVO'
             };
-
             if (selectedCustomer.value?.id) {
                 await customerService.updateCustomer(selectedCustomer.value.id, customerData);
                 toast.success(`¡Cliente ${customerData.name} editado exitosamente!`);
@@ -43,11 +52,8 @@
                 await customerService.addCustomer(customerData);
                 toast.success(`¡Cliente ${customerData.name} agregado exitosamente!`);
             }
-
             await getCustomers();
-            
             formReset();
-
         } catch (error) {
             toast.error(`Error al agregar el cliente ${name.value}.`);
         }
@@ -56,6 +62,9 @@
     async function getCustomers() {
         try {
             customers.value = await customerService.getCustomers();
+            if (tooltipButton.value) {
+                new Tooltip(tooltipButton.value);
+            }
         } catch (error) {
             console.error('Error al obtener los clientes:', error);
         }
@@ -100,6 +109,27 @@
         }
     }
 
+    const filteredCustomers = computed(() => {
+        const query = searchQuery.value.toLowerCase();
+        return customers.value.filter((customer) =>
+            customer.name.toLowerCase().includes(query)
+        );
+    });
+
+    const paginatedCustomers = computed(() => {
+        const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+        const endIndex = startIndex + itemsPerPage.value;
+        return filteredCustomers.value.slice(startIndex, endIndex);
+    });
+
+    const totalPages = computed(() =>
+        Math.ceil(filteredCustomers.value.length / itemsPerPage.value)
+    );
+
+    function handlePageChange(page: number) {
+        currentPage.value = page;
+    }
+
     function formReset() {
         name.value = '';
         address.value = '';
@@ -128,19 +158,21 @@
 </script>
 
 <template>
-    <nav class="navbar navbar-light lato-regular">
+    <nav class="navbar">
         <div class="container-fluid">
             <a class="navbar-brand mb-0 h1"><h3><i class="fa-solid fa-person"></i>&nbsp;Clientes</h3></a>
-            <form class="d-flex justify-content-md-end">
+            <div class="login__field" data-bs-toggle="tooltip" data-bs-placement="top" title="Buscar Por Nombre del Cliente" ref="tooltipButton">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" v-model="searchQuery" class="login__input me-2" placeholder="Ingresa nombre" />
+                </div>     
                 <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#customerModal" >                    
                     <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Cliente" ref="tooltipButton">
                         <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
                     </div>
                 </button>
-            </form>
         </div>    
     </nav>
-    <div class="container mt-2">
+    <div class="container">
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead class="table-primary">
@@ -154,37 +186,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="customers.length > 0" v-for="(customer, index) in customers" :key="customer.id">
+                    <tr v-if="paginatedCustomers.length > 0" v-for="(customer, index) in paginatedCustomers" :key="customer.id">
                         <td>{{ customer.name }}</td>
                         <td>{{ customer.address }}</td>
                         <td>{{ customer.coordinates }}</td>
                         <td>{{ customer.product }}</td>
-                        <td>                           
-                            <div class="form-check form-switch" v-if="customer.status == 'ACTIVO'">
-                                <input class="form-check-input bg-success" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked @click="editStatus(customer.id || 0, customer.status)">                               
-                                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                            </div>
-                            <div class="form-check form-switch" v-else>
-                                <input class="form-check-input bg-danger" type="checkbox" role="switch" id="flexSwitchCheckDefault" @click="editStatus(customer.id || 0, customer.status)">                               
-                                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                            </div>
+                        <td> 
+                            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Cambiar Estatus" ref="tooltipButton">                         
+                                <div class="form-check form-switch" v-if="customer.status == 'ACTIVO'">
+                                    <input class="form-check-input bg-success" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked @click="editStatus(customer.id || 0, customer.status)">                               
+                                    <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                                </div>
+                                <div class="form-check form-switch" v-else>
+                                    <input class="form-check-input bg-danger" type="checkbox" role="switch" id="flexSwitchCheckDefault" @click="editStatus(customer.id || 0, customer.status)">                               
+                                    <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                                </div>
+                            </div> 
                         </td>
-                            <!-- <small>
-                            <button :class="['badge rounded-pill', '', customer.status == 'ACTIVO' ? 'bg-success' : 'bg-danger']"
-                                @click="editStatus(customer.id || 0, customer.status)">{{ customer.status }}
-                            </button></small> -->
-
-                        <td class="text-center">
-                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">
-                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">
-                                    <i class="fa-solid fa-pen-to-square text-info"></i>
-                                </div>
-                            </button>
-                            <button v-if="customer.id" type="button" class="btn btn-sm" @click="deleteCustomer(customer.id)">
-                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
-                                    <i class="fa-solid fa-trash text-danger"></i>
-                                </div>
-                            </button>
+                        <td class="text-center">                                  
+                                <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">                             
+                                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
+                                        <i class="fa-solid fa-pen-to-square text-info"></i>
+                                    </div> 
+                                </button>                                
+                                <button v-if="customer.id" type="button" class="btn btn-sm" @click="deleteCustomer(customer.id)">
+                                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
+                                        <i class="fa-solid fa-trash text-danger"></i>                                
+                                    </div>
+                                </button>
                         </td>
                     </tr>
                     <tr v-else>
@@ -193,9 +222,22 @@
                 </tbody>
             </table>
         </div>
+        <!-- Pagination Controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                    <a class="page-link" href="#" @click.prevent="handlePageChange(currentPage - 1)">Anterior</a>
+                </li>
+                <li class="page-item" :class="{ active: currentPage === page }" v-for="page in totalPages" :key="page">
+                    <a class="page-link" href="#" @click.prevent="handlePageChange(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                    <a class="page-link" href="#" @click.prevent="handlePageChange(currentPage + 1)">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
-    <!-- Modal -->
     <div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -218,11 +260,11 @@
                         <div class="mb-3">
                             <div class="row">
                                 <div class="col-sm-8">
-<label for="coordinates" class="login__field">Ubicacion</label>
-                                <input type="text" id="coordinates" v-model="coordinates" class="login__input" readonly/>  
+                                    <label for="coordinates" class="login__field">Ubicacion</label>
+                                    <input type="text" id="coordinates" v-model="coordinates" class="login__input" readonly/>  
                                 </div>
                                 <div class="col-sm-4 d-flex align-items-end">
-<button type="button" class="btn btn-warning btn-sm" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener</button>
+                                    <button type="button" class="btn btn-warning btn-sm" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener</button>
                                 </div>
                             </div>
                                  
@@ -246,7 +288,6 @@
     </div>
 </template>
 
-  
 <style scoped>
     .table {
         margin-top: 20px;

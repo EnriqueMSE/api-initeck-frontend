@@ -12,11 +12,11 @@ import { authService } from '@/services/authServices';
   <div class="container">
     <img src="/img/initeck.png" alt="Avatar" class="avatar">
     <ul class="nav flex-column">
-      <li class="nav-item">
+      <li class="nav-item" ref="nav-item1">
         <i class="fa-solid fa-gauge"></i>&nbsp;
         <router-link class="custom-link" to="/admin">Dashboard</router-link>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" ref="nav-item2">
         <details class="custom-link">
           <summary class="no-arrow">
             <i class="fa-solid fa-list"></i>&nbsp;
@@ -26,11 +26,15 @@ import { authService } from '@/services/authServices';
           <router-link class="custom-link" to="/admin/productos">Productos</router-link>
         </details>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" ref="nav-item3">
         <i class="fa-solid fa-file-circle-check"></i>&nbsp;
         <router-link class="custom-link" to="/admin/reportes">Reportes</router-link>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" ref="nav-item4">
+        <i class="fa-solid fa-file-circle-check"></i>&nbsp;
+        <router-link class="custom-link" to="/admin/movimientos">Movimientos</router-link>
+      </li>
+      <li class="nav-item" ref="nav-item5">
         <i class="fa-solid fa-person-circle-check"></i>&nbsp;
         <router-link class="custom-link" to="/admin/clientes">Clientes</router-link>
       </li>
@@ -47,6 +51,8 @@ import { authService } from '@/services/authServices';
 </template>
 
 <style scoped>
+  @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
   .container {
     background-color: rgb(255, 255, 255);
     height: 100vh;
@@ -62,11 +68,13 @@ import { authService } from '@/services/authServices';
 
   .custom-link {
     text-decoration: none;
-    font-family: "Lato", sans-serif;
-    font-weight: 400;
-    font-style: normal;
+    font-family: Raleway, sans-serif; 
     font-size: 16px;
     line-height: 3rem;
+  }
+
+  .custom-link:hover{
+    color:rgb(20, 88, 235);
   }
 
   .fa-solid, .custom-link {

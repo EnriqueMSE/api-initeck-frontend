@@ -5,15 +5,30 @@
     import { Product } from '@/models/Products';
     import { toast } from 'vue3-toastify';
     import { productService } from '../services/productsServices';
+    import { Tooltip } from 'bootstrap';
+    import { computed } from 'vue';
 
+    // Form inputs
     const name = ref('');
     const description = ref('');
     const price = ref<number>(0);
+    // Arrays
     let products = ref<Product[]>([]);
-    let selectedProduct = ref<Product | null>(null); // Para saber si se está editando un producto
+    // Selected products
+    let selectedProduct = ref<Product | null>(null);
+    // Tooltip
+    const tooltipButton = ref<HTMLElement | null>(null);
+    // search filter
+    const searchQuery = ref('');
+    // Paginate
+    const currentPage = ref(1);
+    const itemsPerPage = ref(5);
 
     onMounted(() => {
-      obtenerProductos();
+        if (tooltipButton.value) {
+            new Tooltip(tooltipButton.value);
+        }
+        getProducts();
     });
 
     async function handleSubmit() {
@@ -32,7 +47,7 @@
                 toast.success(`¡Producto ${productData.name} agregado exitosamente!`);
             }
 
-            await obtenerProductos();
+            await getProducts();
             
             formReset();
 
@@ -41,7 +56,7 @@
         }
     }
 
-    async function obtenerProductos() {
+    async function getProducts() {
         try {
             products.value = await productService.getProducts();
         } catch (error) {
@@ -60,7 +75,7 @@
         try {
             await productService.deleteProduct(id);
             toast.success('Producto eliminado exitosamente');
-            await obtenerProductos();
+            await getProducts();
         } catch (error) {
             toast.error('Error al eliminar el producto.');
         }
@@ -70,15 +85,49 @@
         name.value = '';
         description.value = '';
         price.value = 0;
+        selectedProduct.value = null;
+    }
+
+    const filteredProducts = computed(() => {
+        const query = searchQuery.value.toLowerCase();
+        return products.value.filter((product) => 
+            product.name.toLowerCase().includes(query)
+        );
+    });
+
+    const paginatedProducts = computed(() => {
+        const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+        const endIndex = startIndex + itemsPerPage.value;
+        return filteredProducts.value.slice(startIndex + endIndex);
+    });
+
+    const totalPages = computed(() =>
+        Math.ceil(filteredProducts.value.length / itemsPerPage.value)
+    );
+
+    function handlePageChange(page: number) {
+        currentPage.value = page;
     }
 
 </script>
 
 <template>
-    <h1 class="Nunito">Catálogo de productos</h1>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn-blue py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#productModal" type="button">Agregar</button>
-    </div>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand mb-0 h1"><h3><i class="fa-solid fa-cubes-stacked"></i>&nbsp;Productos</h3></a>
+            <div class="login__field" data-bs-toggle="tooltip" data-bs-placement="top" title="Buscar Por Nombre del Producto" ref="tooltipButton">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" v-model="searchQuery" class="login__input" placeholder="Ingresa nombre" />
+            </div>
+            <div class="d-flex justify-content-md-end">
+                <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#productModal" >                    
+                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Producto" ref="tooltipButton">
+                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
+                    </div>
+                </button>
+            </div>
+        </div>    
+    </nav>
     <div class="container mt-2">
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -91,7 +140,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="products.length > 0" v-for="(product, index) in products" :key="product.id">
+                    <tr v-if="paginatedProducts.length > 0" v-for="(product, index) in paginatedProducts" :key="product.id">
                         <td>{{ product.name }}</td>
                         <td>{{ product.description }}</td>
                         <td>$ {{ product.price }}</td>
@@ -106,6 +155,20 @@
                 </tbody>
             </table>
         </div>
+        <!-- Pagination Controls -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                    <a class="page-link" href="#" @click.prevent="handlePageChange(currentPage - 1)">Anterior</a>
+                </li>
+                <li class="page-item" :class="{ active: currentPage === page }" v-for="page in totalPages" :key="page">
+                    <a class="page-link" href="#" @click.prevent="handlePageChange(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                    <a class="page-link" href="#" @click.prevent="handlePageChange(currentPage + 1)">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <!-- Modal -->
@@ -133,7 +196,7 @@
                             <input type="number" id="precio" v-model.number="price" class="form-control" step="0.01" min="0" required />
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn-blue">Guardar</button>
+                            <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-floppy-disk fa-sm"></i> Guardar</button>
                         </div>
                     </form>
                 </div>

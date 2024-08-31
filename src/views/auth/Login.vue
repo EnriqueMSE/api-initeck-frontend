@@ -63,7 +63,7 @@ const handleSubmit = async () => {
     
     const response = await authService.login(user);
 
-    router.push('/');
+    router.push('/admin');
 
     setTimeout(() => {
       toast.success('Inicio de sesión exitoso');
