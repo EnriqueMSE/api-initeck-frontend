@@ -95,7 +95,8 @@ let count_customers = ref<number>(0);
 let count_inactive = ref<number>(0);
 let best_seller = ref<string>('');
 
-onMounted(() => {
+onMounted(async() => {
+    console.log("Entro al montarse");
     getCustomers();
     getMostFrequentProducts();
 });

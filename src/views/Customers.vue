@@ -243,43 +243,44 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="customerModalLabel">
-                        {{ selectedCustomer ? 'Editar cliente' : 'Agregar cliente' }}
+                        <i class="fa-solid fa-person"></i>&nbsp;&nbsp;{{ selectedCustomer ? 'Editar cliente' : 'Agregar cliente' }}
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form @submit.prevent="handleSubmit">
-                        <div class="mb-3">
-                            <label for="name" class="login__field">Nombre</label>
-                            <input type="text" id="name" v-model="name" class="login__input" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="address" class="login__field">Dirección</label>
-                            <input type="text" id="address" class="login__input" v-model="address" required>
-                        </div>
-                        <div class="mb-3">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <label for="coordinates" class="login__field">Ubicacion</label>
-                                    <input type="text" id="coordinates" v-model="coordinates" class="login__input" readonly/>  
-                                </div>
-                                <div class="col-sm-4 d-flex align-items-end">
-                                    <button type="button" class="btn btn-warning btn-sm" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener</button>
-                                </div>
+                <div class="modal-body me-20">
+                    <form @submit.prevent="handleSubmit" class="te-5">
+                        <div class="mb-2">
+                            <div class="login__field">
+                                <i class="fa-solid fa-user-tag"></i>                  
+                                <input type="text" id="name" placeholder="Nombre" v-model="name" class="login__input" required />
                             </div>
-                                 
-                                       
                         </div>
-                        <div class="mb-3">
-                            <label for="product" class="login__field">Producto</label>
-                            <select name="product" v-model="product" class="login__input" id="product" required>
-                                <option v-for="(product, index) in products" :key="index" :value="product.name">
-                                    {{ product.name }}
-                                </option>
-                            </select>
+                        <div class="mb-2">
+                            <div class="login__field">
+                                <i class="fa-solid fa-map-location-dot"></i>                        
+                                <input type="text" id="address" placeholder="Dirección" class="login__input" v-model="address" required>
+                            </div>
+                        </div>
+                        <div class="mb-1">
+                                <div class="login__field">
+                                    <i class="fa-solid fa-location-crosshairs"></i> 
+                                    <input type="text" id="coordinates" placeholder="Ubicación" v-model="coordinates" class="login__input" readonly/> 
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" @click="getLocation"><i class="fa-solid fa-map-pin"></i>&nbsp;Obtener</button>
+                                </div>                                                                   
+                        </div>
+                        <div class="mb-2">
+                            <div class="login__field form-floating">
+                                <i class="fa-solid fa-cubes-stacked"></i>                               
+                                <select name="product" v-model="product" class="login__select" id="product" required>
+                                    <option v-for="(product, index) in products" :key="index" :value="product.name">
+                                        {{ product.name }}
+                                    </option>
+                                </select>
+                                <label class="login__field" for="product">Productos Disponibles</label>                               
+                            </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-floppy-disk fa-sm"></i> Guardar</button>
+                            <button type="submit" class="btn btn-sm btn-success"><div data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar Cliente" ref="tooltipButton"><i class="fa-solid fa-floppy-disk fa-sm"></i> Guardar</div></button>
                         </div>
                     </form>
                 </div>

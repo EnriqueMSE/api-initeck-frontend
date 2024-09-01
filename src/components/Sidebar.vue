@@ -31,7 +31,7 @@ import { authService } from '@/services/authServices';
         <router-link class="custom-link" to="/admin/reportes">Reportes</router-link>
       </li>
       <li class="nav-item" ref="nav-item4">
-        <i class="fa-solid fa-file-circle-check"></i>&nbsp;
+        <i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp;
         <router-link class="custom-link" to="/admin/movimientos">Movimientos</router-link>
       </li>
       <li class="nav-item" ref="nav-item5">

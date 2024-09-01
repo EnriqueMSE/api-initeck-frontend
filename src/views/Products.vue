@@ -177,23 +177,29 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="productModalLabel">
-                        {{ selectedProduct ? 'Editar producto' : 'Agregar producto' }}
+                        <i class="fa-solid fa-cubes-stacked"></i>&nbsp;&nbsp;{{ selectedProduct ? 'Editar producto' : 'Agregar producto' }}
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form @submit.prevent="handleSubmit">
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" id="nombre" v-model="name" class="form-control" required />
+                            <div class="login__field">
+                                <i class="fa-solid fa-cube"></i>
+                                <input type="text" id="nombre" placeholder="Nombre" v-model="name" class="login__input" required />
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción</label>
-                            <input type="text" id="description" class="form-control" v-model="description" required>
+                            <div class="login__field">
+                                <i class="fa-solid fa-comment-dots"></i>
+                                <input type="text" id="description" placeholder="Descripción" class="login__input" v-model="description" required>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="precio" class="form-label">Precio</label>
-                            <input type="number" id="precio" v-model.number="price" class="form-control" step="0.01" min="0" required />
+                            <div class="login__field">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                                <input type="number" id="precio" placeholder="Precio" v-model.number="price" class="login__input" step="0.01" min="0" required />
+                            </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-floppy-disk fa-sm"></i> Guardar</button>

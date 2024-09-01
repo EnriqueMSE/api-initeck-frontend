@@ -140,17 +140,22 @@
 </script>
 
 <template>
-    <h1 class="Nunito">Movimientos</h1>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <div class="mr-2">
-            <input type="text" v-model="searchQuery" class="form-control" placeholder="Buscar por cliente" />
-        </div>
-        <button type="button" class="btn btn-primary py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#transactionModal">
-            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" ref="tooltipButton">
-                <i class="fa-solid fa-circle-plus"></i>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand mb-0 h1"><h3><i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp;Movimientos</h3></a>
+            <div class="login__field" data-bs-toggle="tooltip" data-bs-placement="top" title="Buscar Por Cliente" ref="tooltipButton">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" v-model="searchQuery" class="login__input" placeholder="Ingresa nombre" />
             </div>
-        </button>
-    </div>
+            <div class="d-flex justify-content-md-end">
+                <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
+                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Movimiento" ref="tooltipButton">
+                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
+                    </div>
+                </button>
+            </div>
+        </div>    
+    </nav>
     <div class="container mt-2">
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -170,16 +175,20 @@
                         <td>{{ transaction.type }}</td>
                         <td>{{ transaction.payment_method }}</td>
                         <td class="text-center">
-                            <button class="btn-yellow btn-sm me-2" data-bs-toggle="modal" data-bs-target="#transactionModal" @click="editTransaction(transaction)">
-                                Editar
-                            </button>
-                            <button v-if="transaction.id" type="button" class="btn-red btn-sm" @click="deleteTransaction(transaction.id)">
-                                Eliminar
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#transactionModal" @click="editTransaction(transaction)">                             
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
+                                    <i class="fa-solid fa-pen-to-square text-info"></i>
+                                </div> 
+                            </button>                                
+                            <button v-if="transaction.id" type="button" class="btn btn-sm" @click="deleteTransaction(transaction.id)">
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
+                                    <i class="fa-solid fa-trash text-danger"></i>                                
+                                </div>
                             </button>
                         </td>
                     </tr>
                     <tr v-else>
-                        <td colspan="5" class="text-center">No hay productos registrados.</td>
+                        <td colspan="5" class="text-center">No hay movimientos registrados.</td>
                     </tr>
                 </tbody>
             </table>
@@ -205,43 +214,56 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="transactionModalLabel">
-                        {{ selectedTransactions ? 'Editar el movimiento' : 'Agregar un movimiento' }}
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp;&nbsp;{{ selectedTransactions ? 'Editar el movimiento' : 'Agregar un movimiento' }}
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form @submit.prevent="handleSubmit">
                         <div class="mb-3">
-                            <label for="customer" class="form-label">Cliente</label>
-                            <select name="customer" v-model="customer" class="form-control" id="customer" required>
-                                <option v-for="(customer, index) in customers" :key="index" :value="customer.name">
-                                    {{ customer.name }}
-                                </option>
-                            </select>
+                            <div class="login__field form-floating">
+                                <i class="fa-solid fa-person-circle-check"></i>                              
+                                <select name="customer" v-model="customer" class="login__select" id="customer" required>
+                                    <option v-for="(customer, index) in customers" :key="index" :value="customer.name">
+                                        {{ customer.name }}
+                                    </option>
+                                </select>
+                                <label class="login__field" for="customer">Clientes Disponibles</label>                               
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="product" class="form-label">Producto</label>
-                            <select name="product" v-model="product" class="form-control" id="product" required>
-                                <option v-for="(product, index) in products" :key="index" :value="product.name">
-                                    {{ product.name }}
-                                </option>
-                            </select>
+                            <div class="login__field form-floating">
+                                <i class="fa-solid fa-cubes-stacked"></i>                              
+                                <select name="product" v-model="product" class="login__select" id="product" required>
+                                    <option v-for="(product, index) in products" :key="index" :value="product.name">
+                                        {{ product.name }}
+                                    </option>
+                                </select>
+                                <label class="login__field" for="product">Productos Disponibles</label>                               
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="type" class="form-label">Tipo</label>
-                            <select name="type" v-model="type" class="form-control" id="type" required>
-                                <option value="Entrada">Entrada</option>
-                                <option value="Salida">Salida</option>
-                            </select>
+                            <div class="login__field form-floating">
+                                <i class="fa-solid fa-arrow-right-arrow-left"></i>                           
+                                <select name="type" class="login__select" id="type" v-model="type" required>
+                                    <option value="Entrada">Entrada</option>
+                                    <option value="Salida">Salida</option>
+                                </select>
+                                <label class="login__field" for="type">Tipo de Movimiento</label>                               
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="payment_method" class="form-label">Metodo de pago</label>
-                            <select name="payment_method" id="payment_method" v-model="payment_method" class="form-control" readonly>
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="TDC">Tarjeta de crédito</option>
-                                <option value="Transferencia">Efectivo</option>
-                                <option value="TDD">Tarjeta de débito</option>
-                            </select>
+                            <div class="login__field form-floating">
+                                <i class="fa-solid fa-hand-holding-dollar"></i>                          
+                                <select name="payment_method" id="payment_method" v-model="payment_method" class="login__select" required>
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Deposito">Deposito Bancario</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                    <option value="TDC">Tarjeta de crédito</option>
+                                    <option value="TDD">Tarjeta de débito</option>
+                                </select>
+                                <label class="login__field" for="type">Metodo de Pago</label>                               
+                            </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-floppy-disk fa-sm"></i> Guardar</button>
