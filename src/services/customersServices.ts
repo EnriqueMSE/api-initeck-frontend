@@ -15,6 +15,7 @@ export const customerService = {
 
   async getCountCustomers(): Promise<number> {
     const response = await axios.get(`${API_URL}/count`);
+    console.log(response.data.count);
     return response.data.count;
   },
 

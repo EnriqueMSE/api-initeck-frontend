@@ -1,22 +1,22 @@
 export const data = {
     labels: [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
     ],
     datasets: [
       {
         label: 'Data One',
-        backgroundColor: '#f87979',
+        backgroundColor: '#0DCAF0',
         data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
       }
     ]

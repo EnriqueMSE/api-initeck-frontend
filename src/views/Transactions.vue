@@ -13,10 +13,11 @@
     import { computed } from 'vue';
 
     // Form inputs
-    const customer = ref('');
-    const product = ref('');
     const type = ref('');
     const payment_method = ref('');
+    const amount = ref<number>(0);
+    const customer = ref<Customer>();
+    const product = ref<Product>();
     // Arrays
     let customers = ref<Customer[]>([]);
     let products = ref<Product[]>([]);
@@ -42,18 +43,19 @@
 
     async function handleSubmit() {
         try {
-            const transactionData: Transaction = {
-                customer: customer.value,
-                product: product.value,
-                type: type.value,
-                payment_method: payment_method.value,
-            };
+            // const transactionData: Transaction = {
+                // type: type.value,
+                // payment_method: payment_method.value,
+                // amount: amount.value,
+                // customer: customer.value,
+                // product: product.value,
+            // };
 
             if (selectedTransactions.value?.id) {
-                await transactionService.updateTransaction(selectedTransactions.value.id, transactionData);
+                // await transactionService.updateTransaction(selectedTransactions.value.id, transactionData);
                 toast.success(`¡El movimiento se actualizó exitosamente!`);
             } else {
-                await transactionService.addTransaction(transactionData);
+                // await transactionService.addTransaction(transactionData);
                 toast.success(`¡El movimiento se realizó exitosamente!`);
             }
 
@@ -92,10 +94,11 @@
 
     function editTransaction(transaction: Transaction) {
         selectedTransactions.value = transaction;
-        customer.value = transaction.customer;
-        product.value = transaction.product;
+        // customer.value = transaction.customer.name;
+        // product.value = transaction.product.name;
         type.value = transaction.type;
         payment_method.value = transaction.payment_method;
+        amount.value = transaction.amount;
     }
 
     async function deleteTransaction(id: number) {
@@ -111,7 +114,7 @@
     const filteredTransactions = computed(() => {
         const query = searchQuery.value.toLowerCase();
         return transactions.value.filter((transactions) =>
-            transactions.customer.toLowerCase().includes(query)
+            transactions.customer.name.toLowerCase().includes(query)
         );
     });
 
@@ -130,10 +133,11 @@
     }
 
     function formReset() {
-        customer.value = '';
-        product.value = '';
+        // customer.value = '';
+        // product.value = '';
         type.value = '';
         payment_method.value = '';
+        amount.value = 0;
         selectedTransactions.value = null;
     }
 
@@ -165,6 +169,7 @@
                         <th scope="col">Producto</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Método de pago</th>
+                        <th scope="col">Monto</th>
                         <th scope="col" class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -174,6 +179,7 @@
                         <td>{{ transaction.product }}</td>
                         <td>{{ transaction.type }}</td>
                         <td>{{ transaction.payment_method }}</td>
+                        <td>$ {{ transaction.amount }}</td>
                         <td class="text-center">
                             <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#transactionModal" @click="editTransaction(transaction)">                             
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  

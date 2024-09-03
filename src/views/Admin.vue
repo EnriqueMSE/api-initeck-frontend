@@ -1,4 +1,3 @@
-
 <template>
     <h1>Dashboard</h1>
     <div class="row">
@@ -48,76 +47,68 @@
                         <h5 class="text-center">Producto Más Vendido</h5>
                     </div>
                     <div class="col-sm-4">
-                        <h3 class="lato-regular text-center text-info text-wb">{{best_seller}}</h3>
+                        <h3 class="lato-regular text-center text-info text-wb">{{ best_seller }}</h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6" style="height: 300px;"><Bar :data="chartConfig.data" :options="chartConfig.options" /></div>
-        
+        <div class="col-sm-6" style="height: 300px;">
+            <Bar :data="chartConfig.data" :options="chartConfig.options" />
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import { onMounted, ref } from 'vue';
 import { customerService } from '../services/customersServices';
-import { Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
-    CategoryScale,
-    LinearScale
-} from 'chart.js'
 import { Bar } from 'vue-chartjs';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import * as chartConfig from './chartConfig';
 
-ChartJS.register( CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend )
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default {
     name: 'Admin',
     components: {
         Bar,
     },
-    data() {
+    setup() {
+        const count_customers = ref<number>(0);
+        const count_inactive = ref<number>(0);
+        const best_seller = ref<string>('');
+
+        const getCustomers = async () => {
+            try {
+                count_customers.value = await customerService.getCountCustomers();
+                count_inactive.value = await customerService.getCountInactive();
+            } catch (error) {
+                console.error('Error al obtener los clientes:', error);
+            }
+        };
+
+        const getMostFrequentProducts = async () => {
+            try {
+                best_seller.value = await customerService.getMostFrequentProducts();
+            } catch (error) {
+                console.error('Error al obtener los productos más vendidos:', error);
+            }
+        };
+
+        onMounted(() => {
+            getCustomers();
+            getMostFrequentProducts();
+        });
+
         return {
-            chartConfig,
             count_customers,
             count_inactive,
-            best_seller
-        }
+            best_seller,
+            chartConfig
+        };
     }
-}
-
-let count_customers = ref<number>(0);
-let count_inactive = ref<number>(0);
-let best_seller = ref<string>('');
-
-onMounted(async() => {
-    console.log("Entro al montarse");
-    getCustomers();
-    getMostFrequentProducts();
-});
-
-async function getCustomers() {
-    try {
-      count_customers.value = await customerService.getCountCustomers();
-      count_inactive.value = await customerService.getCountInactive();
-    } catch (error) {
-      console.error('Error al obtener los clientes:', error);
-    }
-}
-
-async function getMostFrequentProducts() {
-    try {
-        best_seller.value = await customerService.getMostFrequentProducts();
-    } catch (error) {
-        console.error('Error al obtener los productos más vendidos:', error);
-    }
-}
-
+};
 </script>
 
 <style scoped>
