@@ -59,6 +59,7 @@
     async function getProducts() {
         try {
             products.value = await productService.getProducts();
+            console.log(products.value);
         } catch (error) {
             console.error('Error al obtener productos:', error);
         }

@@ -14,7 +14,7 @@
     const name = ref('');
     const address = ref('');
     const coordinates = ref('');
-    const product = ref('');
+    const product = ref(0);
     // Arrays
     let customers = ref<Customer[]>([]);
     let products = ref<Product[]>([]);
@@ -81,9 +81,9 @@
     function editCustomer(customer: Customer) {
         selectedCustomer.value = customer;
         name.value = customer.name;
-        address.value = customer.address
-        coordinates.value = customer.coordinates
-        product.value = customer.product
+        address.value = customer.address;
+        coordinates.value = customer.coordinates;
+        product.value = customer.product;
     }
 
     async function editStatus(id: number, status: string) {
@@ -134,7 +134,7 @@
         name.value = '';
         address.value = '';
         coordinates.value = '';
-        product.value = '';
+        product.value = 0;
         selectedCustomer.value = null;
     }
 
@@ -203,17 +203,17 @@
                                 </div>
                             </div> 
                         </td>
-                        <td class="text-center">                                  
-                                <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">                             
-                                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
-                                        <i class="fa-solid fa-pen-to-square text-info"></i>
-                                    </div> 
-                                </button>                                
-                                <button v-if="customer.id" type="button" class="btn btn-sm" @click="deleteCustomer(customer.id)">
-                                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
-                                        <i class="fa-solid fa-trash text-danger"></i>                                
-                                    </div>
-                                </button>
+                        <td class="text-center">
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">                             
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
+                                    <i class="fa-solid fa-pen-to-square text-info"></i>
+                                </div> 
+                            </button>                                
+                            <button v-if="customer.id" type="button" class="btn btn-sm" @click="deleteCustomer(customer.id)">
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
+                                    <i class="fa-solid fa-trash text-danger"></i>                                
+                                </div>
+                            </button>
                         </td>
                     </tr>
                     <tr v-else>
@@ -272,7 +272,7 @@
                             <div class="login__field form-floating">
                                 <i class="fa-solid fa-cubes-stacked"></i>                               
                                 <select name="product" v-model="product" class="login__select" id="product" required>
-                                    <option v-for="(product, index) in products" :key="index" :value="product.name">
+                                    <option v-for="(product, index) in products" :key="index" :value="product.id">
                                         {{ product.name }}
                                     </option>
                                 </select>

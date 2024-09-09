@@ -6,20 +6,24 @@
     import { toast } from 'vue3-toastify';
     import { transactionService } from '../services/transactionsServices';
     import { customerService } from '../services/customersServices';
+    import { generalCatService } from '../services/generalCatServices';
     import { productService } from '../services/productsServices';
     import { Customer } from '@/models/Customers';
     import { Transaction } from '@/models/Transactions';
     import { Tooltip } from 'bootstrap';
     import { computed } from 'vue';
+import { GeneralCat } from '@/models/GeneralCat';
 
     // Form inputs
-    const type = ref('');
-    const payment_method = ref('');
+    const type = ref<GeneralCat>();
+    const payment_method = ref<GeneralCat>();
     const amount = ref<number>(0);
     const customer = ref<Customer>();
     const product = ref<Product>();
     // Arrays
     let customers = ref<Customer[]>([]);
+    let generalCatTM = ref<GeneralCat[]>([]);
+    let generalCatPM = ref<GeneralCat[]>([]);
     let products = ref<Product[]>([]);
     let transactions = ref<Transaction[]>([]);
     // Selected customer
@@ -39,23 +43,24 @@
         getCustomers();
         getProducts();
         getTransactions();
+        getGeneralCat();
     });
 
     async function handleSubmit() {
         try {
-            // const transactionData: Transaction = {
-                // type: type.value,
-                // payment_method: payment_method.value,
-                // amount: amount.value,
-                // customer: customer.value,
-                // product: product.value,
-            // };
+            const transactionData: Transaction = {
+                type: type.value,
+                payment_method: payment_method.value,
+                amount: amount.value,
+                customer: customer.value,
+                product: product.value,
+            };
 
             if (selectedTransactions.value?.id) {
-                // await transactionService.updateTransaction(selectedTransactions.value.id, transactionData);
+                await transactionService.updateTransaction(selectedTransactions.value.id, transactionData);
                 toast.success(`¡El movimiento se actualizó exitosamente!`);
             } else {
-                // await transactionService.addTransaction(transactionData);
+                await transactionService.addTransaction(transactionData);
                 toast.success(`¡El movimiento se realizó exitosamente!`);
             }
 
@@ -92,13 +97,29 @@
         }
     }
 
+    async function getGeneralCat() {
+        try {
+            let generalCat = await generalCatService.getCatalogs();
+            console.log(generalCat);
+            for (let i = 0; i < generalCat.length; i++) {
+                if (generalCat[i].code == 'PM') generalCatPM.value.push(generalCat[i]);
+                if (generalCat[i].code == 'TM') generalCatTM.value.push(generalCat[i]);
+            }
+            if (tooltipButton.value) {
+                new Tooltip(tooltipButton.value);
+            }
+        } catch (error) {
+            console.error('Error al obtener los catálogos:', error);
+        }
+    }
+
     function editTransaction(transaction: Transaction) {
         selectedTransactions.value = transaction;
         // customer.value = transaction.customer.name;
         // product.value = transaction.product.name;
-        type.value = transaction.type;
-        payment_method.value = transaction.payment_method;
-        amount.value = transaction.amount;
+        // type.value = transaction.type;
+        // payment_method.value = transaction.payment_method;
+        // amount.value = transaction.amount;
     }
 
     async function deleteTransaction(id: number) {
@@ -133,8 +154,8 @@
     }
 
     function formReset() {
-        // customer.value = '';
-        // product.value = '';
+        customer.value = 0;
+        product.value = 0;
         type.value = '';
         payment_method.value = '';
         amount.value = 0;
@@ -184,7 +205,7 @@
                             <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#transactionModal" @click="editTransaction(transaction)">                             
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
                                     <i class="fa-solid fa-pen-to-square text-info"></i>
-                                </div> 
+                                </div>
                             </button>                                
                             <button v-if="transaction.id" type="button" class="btn btn-sm" @click="deleteTransaction(transaction.id)">
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
@@ -250,25 +271,24 @@
                         </div>
                         <div class="mb-3">
                             <div class="login__field form-floating">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>                           
-                                <select name="type" class="login__select" id="type" v-model="type" required>
-                                    <option value="Entrada">Entrada</option>
-                                    <option value="Salida">Salida</option>
+                                <i class="fa-solid fa-person-circle-check"></i>                              
+                                <select name="type"  v-model="type" class="login__select" id="type" required>
+                                    <option v-for="(cat, index) in generalCatTM" :key="index" :value="cat.id">
+                                        {{ cat.name }}
+                                    </option>
                                 </select>
                                 <label class="login__field" for="type">Tipo de Movimiento</label>                               
                             </div>
                         </div>
                         <div class="mb-3">
                             <div class="login__field form-floating">
-                                <i class="fa-solid fa-hand-holding-dollar"></i>                          
-                                <select name="payment_method" id="payment_method" v-model="payment_method" class="login__select" required>
-                                    <option value="Efectivo">Efectivo</option>
-                                    <option value="Deposito">Deposito Bancario</option>
-                                    <option value="Transferencia">Transferencia</option>
-                                    <option value="TDC">Tarjeta de crédito</option>
-                                    <option value="TDD">Tarjeta de débito</option>
+                                <i class="fa-solid fa-person-circle-check"></i>                              
+                                <select name="payment_method"  v-model="payment_method" class="login__select" id="payment_method" required>
+                                    <option v-for="(cat, index) in generalCatPM" :key="index" :value="cat.id">
+                                        {{ cat.name }}
+                                    </option>
                                 </select>
-                                <label class="login__field" for="type">Metodo de Pago</label>                               
+                                <label class="login__field" for="type">Metodo de Pago</label>
                             </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">

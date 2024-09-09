@@ -11,6 +11,7 @@ import RecoverPassword from '@/views/auth/RecoverPassword.vue';
 import ResetPassword from '@/views/auth/ResetPassword.vue';
 import { useAuth } from '../composables/useAuth';
 import Transactions from '@/views/Transactions.vue';
+import GeneralCat from '@/views/GeneralCat.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { 
@@ -49,6 +50,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '',
         name: 'AdminHome',
         component: Admin
+      },
+      {
+        path: 'catalogos-generales',
+        name: 'Catalogos generales',
+        component: GeneralCat
       },
       {
         path: 'productos',

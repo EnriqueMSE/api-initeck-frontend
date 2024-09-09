@@ -22,8 +22,14 @@ import { authService } from '@/services/authServices';
             <i class="fa-solid fa-list"></i>&nbsp;
             Catálogos
           </summary>
-          &nbsp; <i class="fa-solid fa-cubes-stacked"></i>&nbsp;
-          <router-link class="custom-link" to="/admin/productos">Productos</router-link>
+          <div class="catalogs">
+            <i class="fa-solid fa-cubes-stacked"></i>&nbsp;
+            <router-link class="custom-link" to="/admin/catalogos-generales">Catálogo general</router-link>
+          </div>
+          <div class="catalogs">
+            <i class="fa-solid fa-cubes-stacked"></i>&nbsp;
+            <router-link class="custom-link" to="/admin/productos">Productos</router-link>
+          </div>
         </details>
       </li>
       <li class="nav-item" ref="nav-item3">
@@ -86,5 +92,9 @@ import { authService } from '@/services/authServices';
   }
   summary.no-arrow {
     cursor: pointer;
+  }
+  .catalogs {
+    padding-left: 0.8rem;
+    background-color: rgb(243, 243, 243);
   }
 </style>

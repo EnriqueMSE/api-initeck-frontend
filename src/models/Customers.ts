@@ -4,6 +4,6 @@ export interface Customer {
     name: string;
     address: string;
     coordinates: string;
-    product: string;
+    product: number;
     status: string;
 }
