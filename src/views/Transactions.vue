@@ -9,23 +9,25 @@
     import { generalCatService } from '../services/generalCatServices';
     import { productService } from '../services/productsServices';
     import { Customer } from '@/models/Customers';
-    import { Transaction } from '@/models/Transactions';
+    import { ListTransaction, Transaction } from '@/models/Transactions';
     import { Tooltip } from 'bootstrap';
     import { computed } from 'vue';
-import { GeneralCat } from '@/models/GeneralCat';
+    import { GeneralCat } from '@/models/GeneralCat';
 
     // Form inputs
-    const type = ref<GeneralCat>();
-    const payment_method = ref<GeneralCat>();
+    const type = ref<number>(0);
+    const payment_method = ref<number>(0);
     const amount = ref<number>(0);
-    const customer = ref<Customer>();
-    const product = ref<Product>();
+    const customer = ref<number>(0);
+    const product = ref<number>(0);
     // Arrays
     let customers = ref<Customer[]>([]);
     let generalCatTM = ref<GeneralCat[]>([]);
     let generalCatPM = ref<GeneralCat[]>([]);
     let products = ref<Product[]>([]);
-    let transactions = ref<Transaction[]>([]);
+    let transactions = ref<ListTransaction[]>([]);
+
+    let enforceability = ref<boolean>(false);
     // Selected customer
     let selectedTransactions = ref<Transaction | null>(null);
     // Tooltip
@@ -44,18 +46,18 @@ import { GeneralCat } from '@/models/GeneralCat';
         getProducts();
         getTransactions();
         getGeneralCat();
+        getEnforceability();
     });
 
     async function handleSubmit() {
         try {
             const transactionData: Transaction = {
+                customer: customer.value,
+                product: product.value,
                 type: type.value,
                 payment_method: payment_method.value,
                 amount: amount.value,
-                customer: customer.value,
-                product: product.value,
             };
-
             if (selectedTransactions.value?.id) {
                 await transactionService.updateTransaction(selectedTransactions.value.id, transactionData);
                 toast.success(`¡El movimiento se actualizó exitosamente!`);
@@ -100,7 +102,6 @@ import { GeneralCat } from '@/models/GeneralCat';
     async function getGeneralCat() {
         try {
             let generalCat = await generalCatService.getCatalogs();
-            console.log(generalCat);
             for (let i = 0; i < generalCat.length; i++) {
                 if (generalCat[i].code == 'PM') generalCatPM.value.push(generalCat[i]);
                 if (generalCat[i].code == 'TM') generalCatTM.value.push(generalCat[i]);
@@ -113,10 +114,16 @@ import { GeneralCat } from '@/models/GeneralCat';
         }
     }
 
-    function editTransaction(transaction: Transaction) {
-        selectedTransactions.value = transaction;
-        // customer.value = transaction.customer.name;
-        // product.value = transaction.product.name;
+    async function getEnforceability() {
+        let list = await transactionService.getEnforceability();
+        if (list.length > 0) enforceability.value = false;
+        else enforceability.value = true;
+    }
+
+    function editTransaction(transaction: ListTransaction) {
+        // selectedTransactions.value = transaction;
+        // customer.value = transaction.customer.id;
+        // product.value = transaction.product.id;
         // type.value = transaction.type;
         // payment_method.value = transaction.payment_method;
         // amount.value = transaction.amount;
@@ -135,7 +142,7 @@ import { GeneralCat } from '@/models/GeneralCat';
     const filteredTransactions = computed(() => {
         const query = searchQuery.value.toLowerCase();
         return transactions.value.filter((transactions) =>
-            transactions.customer.name.toLowerCase().includes(query)
+            transactions.customer.toLowerCase().includes(query)
         );
     });
 
@@ -156,10 +163,15 @@ import { GeneralCat } from '@/models/GeneralCat';
     function formReset() {
         customer.value = 0;
         product.value = 0;
-        type.value = '';
-        payment_method.value = '';
+        type.value = 0;
+        payment_method.value = 0;
         amount.value = 0;
         selectedTransactions.value = null;
+    }
+
+    async function createEnforceability() {
+        enforceability.value = false;
+        await transactionService.createEnforceability();
     }
 
 </script>
@@ -173,6 +185,16 @@ import { GeneralCat } from '@/models/GeneralCat';
                 <input type="text" v-model="searchQuery" class="login__input" placeholder="Ingresa nombre" />
             </div>
             <div class="d-flex justify-content-md-end">
+                <button type="button" class="btn btn-success btn-sm py-1" @click="createEnforceability()" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
+                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Movimiento" ref="tooltipButton">
+                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Exigibilidad
+                    </div>
+                </button>
+                <button type="button" class="btn btn-success btn-sm py-1" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
+                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Movimiento" ref="tooltipButton">
+                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Domiciliación
+                    </div>
+                </button>
                 <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
                     <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Movimiento" ref="tooltipButton">
                         <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
@@ -195,19 +217,19 @@ import { GeneralCat } from '@/models/GeneralCat';
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="paginatedTransactions.length > 0" v-for="(transaction, index) in paginatedTransactions" :key="transaction.id">
-                        <td>{{ transaction.customer }}</td>
-                        <td>{{ transaction.product }}</td>
-                        <td>{{ transaction.type }}</td>
-                        <td>{{ transaction.payment_method }}</td>
-                        <td>$ {{ transaction.amount }}</td>
+                    <tr v-if="paginatedTransactions.length > 0" v-for="(TransactionPost, index) in paginatedTransactions" :key="TransactionPost.id">
+                        <td>{{ TransactionPost.customer }}</td>
+                        <td>{{ TransactionPost.product }}</td>
+                        <td>{{ TransactionPost.type }}</td>
+                        <td>{{ TransactionPost.payment_method }}</td>
+                        <td>$ {{ TransactionPost.amount }}</td>
                         <td class="text-center">
-                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#transactionModal" @click="editTransaction(transaction)">                             
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#transactionModal" @click="editTransaction(TransactionPost)">
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
                                     <i class="fa-solid fa-pen-to-square text-info"></i>
                                 </div>
                             </button>                                
-                            <button v-if="transaction.id" type="button" class="btn btn-sm" @click="deleteTransaction(transaction.id)">
+                            <button v-if="TransactionPost.id" type="button" class="btn btn-sm" @click="deleteTransaction(TransactionPost.id)">
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
                                     <i class="fa-solid fa-trash text-danger"></i>                                
                                 </div>
@@ -251,7 +273,7 @@ import { GeneralCat } from '@/models/GeneralCat';
                             <div class="login__field form-floating">
                                 <i class="fa-solid fa-person-circle-check"></i>                              
                                 <select name="customer" v-model="customer" class="login__select" id="customer" required>
-                                    <option v-for="(customer, index) in customers" :key="index" :value="customer.name">
+                                    <option v-for="(customer, index) in customers" :key="index" :value="customer.id">
                                         {{ customer.name }}
                                     </option>
                                 </select>
@@ -262,7 +284,7 @@ import { GeneralCat } from '@/models/GeneralCat';
                             <div class="login__field form-floating">
                                 <i class="fa-solid fa-cubes-stacked"></i>                              
                                 <select name="product" v-model="product" class="login__select" id="product" required>
-                                    <option v-for="(product, index) in products" :key="index" :value="product.name">
+                                    <option v-for="(product, index) in products" :key="index" :value="product.id">
                                         {{ product.name }}
                                     </option>
                                 </select>
@@ -289,6 +311,13 @@ import { GeneralCat } from '@/models/GeneralCat';
                                     </option>
                                 </select>
                                 <label class="login__field" for="type">Metodo de Pago</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="login__field form-floating">
+                                <i class="fa-solid fa-person-circle-check"></i>                              
+                                <input class="login__select" type="number" name="amount" v-model="amount" id="amount">
+                                <label class="login__field" for="type">Cantidad</label>
                             </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">

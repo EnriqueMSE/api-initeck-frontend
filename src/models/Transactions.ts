@@ -1,12 +1,18 @@
-import { Customer } from "./Customers";
-import { GeneralCat } from "./GeneralCat";
-import { Product } from "./Products";
+
+export interface ListTransaction {
+    id?: number;
+    customer: string;
+    product: string;
+    type: string;
+    payment_method: string;
+    amount: number;
+}
 
 export interface Transaction {
     id?: number;
-    type: GeneralCat;
-    payment_method: GeneralCat;
+    customer: number;
+    product: number;
+    type: number;
+    payment_method: number;
     amount: number;
-    customer: Customer;
-    product: Product;
-}  
+}
