@@ -116,7 +116,7 @@
 
     async function getEnforceability() {
         let list = await transactionService.getEnforceability();
-        if (list.length > 0) enforceability.value = false;
+        if (list.valueOf.length > 0) enforceability.value = false;
         else enforceability.value = true;
     }
 
@@ -185,14 +185,9 @@
                 <input type="text" v-model="searchQuery" class="login__input" placeholder="Ingresa nombre" />
             </div>
             <div class="d-flex justify-content-md-end">
-                <button type="button" class="btn btn-success btn-sm py-1" @click="createEnforceability()" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
+                <button type="button" class="btn btn-warning btn-sm me-3" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
                     <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Movimiento" ref="tooltipButton">
-                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Exigibilidad
-                    </div>
-                </button>
-                <button type="button" class="btn btn-success btn-sm py-1" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
-                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Movimiento" ref="tooltipButton">
-                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Domiciliación
+                        <i class="fa-solid fa-money-bill-transfer"></i>&nbsp;Domiciliación
                     </div>
                 </button>
                 <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    

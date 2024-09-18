@@ -28,7 +28,7 @@ export const transactionService = {
 
   async createEnforceability(): Promise<void> {
     await axios.get(`${API_URL}/enforceability`);
-  }
+  },
 
   async getEnforceability(): Promise<number> {
     const response = await axios.get(`${API_URL}/enforceability/count`);

@@ -12,6 +12,7 @@
 
     // Form inputs
     const name = ref('');
+    const email = ref('');
     const address = ref('');
     const coordinates = ref('');
     const product = ref(0);
@@ -40,9 +41,11 @@
         try {
             const customerData: Customer = {
                 name: name.value,
+                email: email.value,
                 address: address.value,
                 coordinates: coordinates.value,
                 product: product.value,
+                account: product.value, /*  CAMBIAR ESTE VALOR POR EL CORRECTO*/
                 status: 'ACTIVO'
             };
             if (selectedCustomer.value?.id) {
@@ -204,6 +207,11 @@
                             </div> 
                         </td>
                         <td class="text-center">
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#receiptModal" @click="editCustomer(customer)">                             
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Recibo" ref="tooltipButton">  
+                                    <i class="fa-solid fa-file-invoice text-warning"></i>
+                                </div> 
+                            </button> 
                             <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">                             
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
                                     <i class="fa-solid fa-pen-to-square text-info"></i>
@@ -257,6 +265,12 @@
                         </div>
                         <div class="mb-2">
                             <div class="login__field">
+                                <i class="fa-solid fa-at"></i>                   
+                                <input type="email" id="email" placeholder="Email" class="login__input" v-model="email" required>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="login__field">
                                 <i class="fa-solid fa-map-location-dot"></i>                        
                                 <input type="text" id="address" placeholder="Dirección" class="login__input" v-model="address" required>
                             </div>
@@ -277,6 +291,17 @@
                                     </option>
                                 </select>
                                 <label class="login__field" for="product">Productos Disponibles</label>                               
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="login__field form-floating">
+                                <i class="fa-solid fa-building-columns"></i>                         
+                                <select name="account" v-model="product" class="login__select" id="account" required>
+                                    <option v-for="(product, index) in products" :key="index" :value="product.id">
+                                        {{ product.name }}
+                                    </option>
+                                </select>
+                                <label class="login__field" for="product">Cuentas Disponibles</label>                               
                             </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
