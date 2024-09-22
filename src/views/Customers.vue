@@ -9,16 +9,22 @@
     import { Customer } from '@/models/Customers';
     import { Tooltip } from 'bootstrap';
     import { computed } from 'vue';
+import jsPDF from 'jspdf';
+import { GeneralCat } from '@/models/GeneralCat';
+import { generalCatService } from '@/services/generalCatServices';
 
     // Form inputs
+    const contract = ref('');
     const name = ref('');
     const email = ref('');
     const address = ref('');
     const coordinates = ref('');
     const product = ref(0);
+    const account = ref(0);
     // Arrays
     let customers = ref<Customer[]>([]);
     let products = ref<Product[]>([]);
+    let generalCatAC = ref<GeneralCat[]>([]);
     // Selected customer
     let selectedCustomer = ref<Customer | null>(null);
     // Tooltip
@@ -35,17 +41,33 @@
         }
         getCustomers();
         getProducts();
+        getGeneralCat();
     });
+
+    async function getGeneralCat() {
+        try {
+            let generalCat = await generalCatService.getCatalogs();
+            for (let i = 0; i < generalCat.length; i++) {
+                if (generalCat[i].code == 'AC') generalCatAC.value.push(generalCat[i]);
+            }
+            // if (tooltipButton.value) {
+            //     new Tooltip(tooltipButton.value);
+            // }
+        } catch (error) {
+            console.error('Error al obtener los catálogos:', error);
+        }
+    }
 
     async function handleSubmit() {
         try {
             const customerData: Customer = {
+                contract: contract.value,
                 name: name.value,
                 email: email.value,
                 address: address.value,
                 coordinates: coordinates.value,
                 product: product.value,
-                account: product.value, /*  CAMBIAR ESTE VALOR POR EL CORRECTO*/
+                account: account.value,
                 status: 'ACTIVO'
             };
             if (selectedCustomer.value?.id) {
@@ -83,6 +105,7 @@
 
     function editCustomer(customer: Customer) {
         selectedCustomer.value = customer;
+        contract.value = customer.contract;
         name.value = customer.name;
         address.value = customer.address;
         coordinates.value = customer.coordinates;
@@ -134,6 +157,7 @@
     }
 
     function formReset() {
+        contract.value = '';
         name.value = '';
         address.value = '';
         coordinates.value = '';
@@ -158,6 +182,41 @@
         }
     }
 
+    function generatePdf(customer: Customer) {
+      // Crear una nueva instancia de jsPDF
+      let folio_date = getFirstDayOfMonth();
+      const doc = new jsPDF();
+
+      // Agregar texto al PDF
+      doc.text('Hello, this is a PDF generated with jsPDF!', 10, 10);
+
+      // Agregar más contenido como título
+      doc.setFontSize(16);
+      doc.text('Title of the PDF', 10, 30);
+
+      doc.text(`${customer.account}`, 10, 20);
+
+      // Agregar tabla, imágenes, etc. si lo necesitas
+
+      // Guardar el archivo PDF
+      doc.save(`${customer.contract}_${folio_date}.pdf`);
+    }
+
+    function getFirstDayOfMonth(): string {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth(); // January is 0
+      const firstDay = new Date(year, month, 1);
+
+      // Format day, month, and year as two digits each
+      const day = String(firstDay.getDate()).padStart(2, '0');
+      const monthFormatted = String(firstDay.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+      const yearFormatted = year;
+
+      // Format in ddmmyyyy
+      return `${day}${monthFormatted}${yearFormatted}`;
+    }
+
 </script>
 
 <template>
@@ -180,6 +239,7 @@
             <table class="table table-striped table-hover">
                 <thead class="table-primary">
                     <tr>
+                        <th scope="col">Contrato</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Dirección</th>
                         <th scope="col">Coordenadas</th>
@@ -190,6 +250,7 @@
                 </thead>
                 <tbody>
                     <tr v-if="paginatedCustomers.length > 0" v-for="(customer, index) in paginatedCustomers" :key="customer.id">
+                        <td>{{ customer.contract }}</td>
                         <td>{{ customer.name }}</td>
                         <td>{{ customer.address }}</td>
                         <td>{{ customer.coordinates }}</td>
@@ -207,7 +268,7 @@
                             </div> 
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#receiptModal" @click="editCustomer(customer)">                             
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#receiptModal" @click="generatePdf(customer)">                             
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Recibo" ref="tooltipButton">  
                                     <i class="fa-solid fa-file-invoice text-warning"></i>
                                 </div> 
@@ -260,6 +321,12 @@
                         <div class="mb-2">
                             <div class="login__field">
                                 <i class="fa-solid fa-user-tag"></i>                  
+                                <input type="text" id="contract" placeholder="Contrato" v-model="contract" class="login__input" required />
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div class="login__field">
+                                <i class="fa-solid fa-user-tag"></i>                  
                                 <input type="text" id="name" placeholder="Nombre" v-model="name" class="login__input" required />
                             </div>
                         </div>
@@ -297,8 +364,8 @@
                             <div class="login__field form-floating">
                                 <i class="fa-solid fa-building-columns"></i>                         
                                 <select name="account" v-model="product" class="login__select" id="account" required>
-                                    <option v-for="(product, index) in products" :key="index" :value="product.id">
-                                        {{ product.name }}
+                                    <option v-for="(account, index) in generalCatAC" :key="index" :value="account.id">
+                                        {{ account.name }}
                                     </option>
                                 </select>
                                 <label class="login__field" for="product">Cuentas Disponibles</label>                               

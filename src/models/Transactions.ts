@@ -1,6 +1,7 @@
 
 export interface ListTransaction {
     id?: number;
+    contract: string;
     customer: string;
     product: string;
     type: string;
@@ -10,6 +11,7 @@ export interface ListTransaction {
 
 export interface Transaction {
     id?: number;
+    // contract: string;
     customer: number;
     product: number;
     type: number;

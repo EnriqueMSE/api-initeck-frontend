@@ -174,6 +174,11 @@
         await transactionService.createEnforceability();
     }
 
+    async function domiciliation() {
+        enforceability.value = true;
+        await transactionService.createDomiciliation();
+    }
+
 </script>
 
 <template>
@@ -185,7 +190,7 @@
                 <input type="text" v-model="searchQuery" class="login__input" placeholder="Ingresa nombre" />
             </div>
             <div class="d-flex justify-content-md-end">
-                <button type="button" class="btn btn-warning btn-sm me-3" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
+                <button type="button" class="btn btn-warning btn-sm me-3" @click="domiciliation()" data-bs-toggle="modal" data-bs-target="#transactionModal" >                    
                     <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar Movimiento" ref="tooltipButton">
                         <i class="fa-solid fa-money-bill-transfer"></i>&nbsp;Domiciliación
                     </div>

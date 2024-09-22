@@ -99,7 +99,7 @@
     const paginatedProducts = computed(() => {
         const startIndex = (currentPage.value - 1) * itemsPerPage.value;
         const endIndex = startIndex + itemsPerPage.value;
-        return filteredProducts.value.slice(startIndex + endIndex);
+        return filteredProducts.value.slice(startIndex, endIndex);
     });
 
     const totalPages = computed(() =>

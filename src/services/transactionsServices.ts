@@ -33,5 +33,10 @@ export const transactionService = {
   async getEnforceability(): Promise<number> {
     const response = await axios.get(`${API_URL}/enforceability/count`);
     return response.data;
+  },
+
+  async createDomiciliation(): Promise<void> {
+    await axios.get(`${API_URL}/domiciliation`);
   }
+
 };
