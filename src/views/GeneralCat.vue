@@ -57,9 +57,6 @@
     async function getGeneralCat() {
         try {
             generalCat.value = await generalCatService.getCatalogs();
-            if (tooltipButton.value) {
-                new Tooltip(tooltipButton.value);
-            }
         } catch (error) {
             console.error('Error al obtener los catálogos:', error);
         }
@@ -134,11 +131,13 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" v-model="searchQuery" class="login__input me-2" placeholder="Ingresa nombre" />
             </div>
-            <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#generalCatModal" >
-                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar catálogo" ref="tooltipButton">
-                    <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
-                </div>
-            </button>
+            <div class="d-flex justify-content-md-end">
+                <button type="button" class="btn btn-success btn-sm py-1" @click="formReset()" data-bs-toggle="modal" data-bs-target="#generalCatModal" >
+                    <div data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar catálogo" ref="tooltipButton">
+                        <i class="fa-solid fa-plus fa-sm"></i>&nbsp;Agregar
+                    </div>
+                </button>
+            </div>
         </div>    
     </nav>
     <div class="container">
@@ -218,19 +217,19 @@
                     <form @submit.prevent="handleSubmit" class="te-5">
                         <div class="mb-2">
                             <div class="login__field">
-                                <i class="fa-solid fa-map-location-dot"></i>
+                                <i class="fa-solid fa-tag"></i>
                                 <input type="text" id="code" placeholder="Code" class="login__input" v-model="code" required>
                             </div>
                         </div>
                         <div class="mb-1">
                             <div class="login__field">
-                                <i class="fa-solid fa-location-crosshairs"></i>
+                                <i class="fa-solid fa-list"></i>
                                 <input type="text" id="type" placeholder="Type" v-model="type" class="login__input" required> 
                             </div>
                         </div>
                         <div class="mb-2">
                             <div class="login__field">
-                                <i class="fa-solid fa-user-tag"></i>                  
+                                <i class="fa-solid fa-spell-check"></i>             
                                 <input type="text" id="name" placeholder="Name" v-model="name" class="login__input" required>
                             </div>
                         </div>

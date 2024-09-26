@@ -3,7 +3,7 @@
 	<div class="screen">
 		<div class="screen__content">
 			<form class="login" @submit.prevent="handleSubmit">
-        <img src="/img/initeck.png" style="width: 200px; height: 30px;">
+        		<img src="/img/initeck.png" style="width: 200px; height: 30px;">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
 					<input type="text" class="login__input" placeholder="Email" id="loginEmail" v-model="email" required>
@@ -16,9 +16,9 @@
 					<span class="button__text">Iniciar Sesión</span>
 					<i class="button__icon fas fa-chevron-right"></i>
 				</button>
-        <br><br><br><br>	
-        <router-link class="text-center mt-3 custom-link text-white font-wb" to="/recover-password">Recuperar contraseña</router-link><br>
-        <router-link class="text-center mt-2 custom-link text-white font-wb" to="/register">Registrarse</router-link>	
+				<br><br><br><br>	
+				<router-link class="text-center mt-3 custom-link text-white font-wb" to="/recover-password">Recuperar contraseña</router-link><br>
+				<router-link class="text-center mt-2 custom-link text-white font-wb" to="/register">Registrarse</router-link>	
 			</form>
 			<div class="social-login">	
 				<div class="social-icons">

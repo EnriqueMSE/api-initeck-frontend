@@ -363,7 +363,7 @@ import { generalCatService } from '@/services/generalCatServices';
                         <div class="mb-2">
                             <div class="login__field form-floating">
                                 <i class="fa-solid fa-building-columns"></i>                         
-                                <select name="account" v-model="product" class="login__select" id="account" required>
+                                <select name="account" v-model="account" class="login__select" id="account" required>
                                     <option v-for="(account, index) in generalCatAC" :key="index" :value="account.id">
                                         {{ account.name }}
                                     </option>

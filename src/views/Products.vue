@@ -59,7 +59,6 @@
     async function getProducts() {
         try {
             products.value = await productService.getProducts();
-            console.log(products.value);
         } catch (error) {
             console.error('Error al obtener productos:', error);
         }
@@ -115,7 +114,9 @@
 <template>
     <nav class="navbar">
         <div class="container-fluid">
-            <a class="navbar-brand mb-0 h1"><h3><i class="fa-solid fa-cubes-stacked"></i>&nbsp;Productos</h3></a>
+            <a class="navbar-brand mb-0 h1">
+                <h3><i class="fa-solid fa-cubes-stacked"></i>&nbsp;Productos</h3>
+            </a>
             <div class="login__field" data-bs-toggle="tooltip" data-bs-placement="top" title="Buscar Por Nombre del Producto" ref="tooltipButton">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" v-model="searchQuery" class="login__input" placeholder="Ingresa nombre" />
@@ -146,8 +147,16 @@
                         <td>{{ product.description }}</td>
                         <td>$ {{ product.price }}</td>
                         <td class="text-center">
-                            <button class="btn-yellow btn-sm me-2" data-bs-toggle="modal" data-bs-target="#productModal" @click="editarProducto(product)">Editar</button>
-                            <button v-if="product.id" class="btn-red btn-sm" @click="eliminarProducto(product.id)">Eliminar</button>
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#productModal" @click="editarProducto(product)">
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Producto" ref="tooltipButton">
+                                    <i class="fa-solid fa-pen-to-square text-info"></i>
+                                </div> 
+                            </button>
+                            <button v-if="product.id" type="button" class="btn btn-sm" @click="eliminarProducto(product.id)">
+                                <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Producto" ref="tooltipButton">
+                                    <i class="fa-solid fa-trash text-danger"></i>                                
+                                </div>
+                            </button>
                         </td>
                     </tr>
                     <tr v-else>
