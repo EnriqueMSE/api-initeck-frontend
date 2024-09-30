@@ -6,12 +6,12 @@
     import { toast } from 'vue3-toastify';
     import { customerService } from '../services/customersServices';
     import { productService } from '../services/productsServices';
-    import { Customer } from '@/models/Customers';
+    import { Customer, CustomerList } from '@/models/Customers';
     import { Tooltip } from 'bootstrap';
     import { computed } from 'vue';
-import jsPDF from 'jspdf';
-import { GeneralCat } from '@/models/GeneralCat';
-import { generalCatService } from '@/services/generalCatServices';
+    import jsPDF from 'jspdf';
+    import { GeneralCat } from '@/models/GeneralCat';
+    import { generalCatService } from '@/services/generalCatServices';
 
     // Form inputs
     const contract = ref('');
@@ -21,16 +21,22 @@ import { generalCatService } from '@/services/generalCatServices';
     const coordinates = ref('');
     const product = ref(0);
     const account = ref(0);
+
     // Arrays
     let customers = ref<Customer[]>([]);
+    let customersList = ref<CustomerList[]>([]);
     let products = ref<Product[]>([]);
     let generalCatAC = ref<GeneralCat[]>([]);
+
     // Selected customer
-    let selectedCustomer = ref<Customer | null>(null);
+    let selectedCustomer = ref<CustomerList | null>(null);
+
     // Tooltip
     const tooltipButton = ref<HTMLElement | null>(null);
+
     // search filter
     const searchQuery = ref('');
+
     // Paginate
     const currentPage = ref(1);
     const itemsPerPage = ref(5);
@@ -50,9 +56,9 @@ import { generalCatService } from '@/services/generalCatServices';
             for (let i = 0; i < generalCat.length; i++) {
                 if (generalCat[i].code == 'AC') generalCatAC.value.push(generalCat[i]);
             }
-            // if (tooltipButton.value) {
-            //     new Tooltip(tooltipButton.value);
-            // }
+            if (tooltipButton.value) {
+                new Tooltip(tooltipButton.value);
+            }
         } catch (error) {
             console.error('Error al obtener los catálogos:', error);
         }
@@ -86,7 +92,7 @@ import { generalCatService } from '@/services/generalCatServices';
 
     async function getCustomers() {
         try {
-            customers.value = await customerService.getCustomers();
+            customersList.value = await customerService.getCustomers();
             if (tooltipButton.value) {
                 new Tooltip(tooltipButton.value);
             }
@@ -103,13 +109,16 @@ import { generalCatService } from '@/services/generalCatServices';
         }
     }
 
-    function editCustomer(customer: Customer) {
+    function editCustomer(customer: CustomerList) {
         selectedCustomer.value = customer;
         contract.value = customer.contract;
         name.value = customer.name;
+        email.value = customer.email;
         address.value = customer.address;
         coordinates.value = customer.coordinates;
-        product.value = customer.product;
+        product.value = customer.id_product;
+        account.value = customer.id_account;
+        console.log(account.value);
     }
 
     async function editStatus(id: number, status: string) {
@@ -137,7 +146,7 @@ import { generalCatService } from '@/services/generalCatServices';
 
     const filteredCustomers = computed(() => {
         const query = searchQuery.value.toLowerCase();
-        return customers.value.filter((customer) =>
+        return customersList.value.filter((customer) =>
             customer.name.toLowerCase().includes(query)
         );
     });
@@ -159,6 +168,7 @@ import { generalCatService } from '@/services/generalCatServices';
     function formReset() {
         contract.value = '';
         name.value = '';
+        email.value = '';
         address.value = '';
         coordinates.value = '';
         product.value = 0;
@@ -194,12 +204,12 @@ import { generalCatService } from '@/services/generalCatServices';
       doc.setFontSize(16);
       doc.text('Title of the PDF', 10, 30);
 
-      doc.text(`${customer.account}`, 10, 20);
+    //   doc.text(`${customer.account}`, 10, 20);
 
       // Agregar tabla, imágenes, etc. si lo necesitas
 
       // Guardar el archivo PDF
-      doc.save(`${customer.contract}_${folio_date}.pdf`);
+    //   doc.save(`${customer.contract}_${folio_date}.pdf`);
     }
 
     function getFirstDayOfMonth(): string {
@@ -241,6 +251,7 @@ import { generalCatService } from '@/services/generalCatServices';
                     <tr>
                         <th scope="col">Contrato</th>
                         <th scope="col">Nombre</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Dirección</th>
                         <th scope="col">Coordenadas</th>
                         <th scope="col">Producto</th>
@@ -249,36 +260,37 @@ import { generalCatService } from '@/services/generalCatServices';
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="paginatedCustomers.length > 0" v-for="(customer, index) in paginatedCustomers" :key="customer.id">
-                        <td>{{ customer.contract }}</td>
-                        <td>{{ customer.name }}</td>
-                        <td>{{ customer.address }}</td>
-                        <td>{{ customer.coordinates }}</td>
-                        <td>{{ customer.product }}</td>
+                    <tr v-if="paginatedCustomers.length > 0" v-for="(customersList, index) in paginatedCustomers" :key="customersList.id">
+                        <td>{{ customersList.contract }}</td>
+                        <td>{{ customersList.name }}</td>
+                        <td>{{ customersList.email }}</td>
+                        <td>{{ customersList.address }}</td>
+                        <td>{{ customersList.coordinates }}</td>
+                        <td>{{ customersList.product }}</td>
                         <td> 
                             <div data-bs-toggle="tooltip" data-bs-placement="top" title="Cambiar Estatus" ref="tooltipButton">                         
-                                <div class="form-check form-switch" v-if="customer.status == 'ACTIVO'">
-                                    <input class="form-check-input bg-success" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked @click="editStatus(customer.id || 0, customer.status)">                               
+                                <div class="form-check form-switch" v-if="customersList.status == 'ACTIVO'">
+                                    <input class="form-check-input bg-success" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked @click="editStatus(customersList.id || 0, customersList.status)">                               
                                     <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                                 </div>
                                 <div class="form-check form-switch" v-else>
-                                    <input class="form-check-input bg-danger" type="checkbox" role="switch" id="flexSwitchCheckDefault" @click="editStatus(customer.id || 0, customer.status)">                               
+                                    <input class="form-check-input bg-danger" type="checkbox" role="switch" id="flexSwitchCheckDefault" @click="editStatus(customersList.id || 0, customersList.status)">                               
                                     <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                                 </div>
                             </div> 
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#receiptModal" @click="generatePdf(customer)">                             
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#receiptModal" @click="generatePdf(customersList)">
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Recibo" ref="tooltipButton">  
                                     <i class="fa-solid fa-file-invoice text-warning"></i>
                                 </div> 
-                            </button> 
-                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customer)">                             
+                            </button>
+                            <button class="btn btn-sm me-2" data-bs-toggle="modal" data-bs-target="#customerModal" @click="editCustomer(customersList)">
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Clientes" ref="tooltipButton">  
                                     <i class="fa-solid fa-pen-to-square text-info"></i>
                                 </div> 
-                            </button>                                
-                            <button v-if="customer.id" type="button" class="btn btn-sm" @click="deleteCustomer(customer.id)">
+                            </button>
+                            <button v-if="customersList.id" type="button" class="btn btn-sm" @click="deleteCustomer(customersList.id)">
                                 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Cliente" ref="tooltipButton">
                                     <i class="fa-solid fa-trash text-danger"></i>                                
                                 </div>

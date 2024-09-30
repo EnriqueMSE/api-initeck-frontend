@@ -1,20 +1,20 @@
 
 import axios from 'axios';
-import { Customer } from '@/models/Customers';
+import { Customer, CustomerList } from '@/models/Customers';
 import { environment } from '@/environment/environment.develoment';
+import { Frequency } from '@/models/Transactions';
 
 const apiUrl = environment.base_url;
 const API_URL = `${apiUrl}customers`;
 
 export const customerService = {
-  async getCustomers(): Promise<Customer[]> {
+  async getCustomers(): Promise<CustomerList[]> {
     const response = await axios.get(API_URL);
     return response.data;
   },
 
   async getCountCustomers(): Promise<number> {
     const response = await axios.get(`${API_URL}/count`);
-    console.log(response.data.count);
     return response.data.count;
   },
 
@@ -23,7 +23,7 @@ export const customerService = {
     return response.data.count;
   },
 
-  async getMostFrequentProducts(): Promise<string> {
+  async getMostFrequentProducts(): Promise<Frequency[]> {
     const response = await axios.get(`${API_URL}/most_frequent_products`);
     return response.data;
   },

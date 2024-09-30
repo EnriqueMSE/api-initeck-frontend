@@ -18,3 +18,9 @@ export interface Transaction {
     payment_method: number;
     amount: number;
 }
+
+export interface Frequency {
+    name: string;
+    id_product: number;
+    frequency: number;
+}

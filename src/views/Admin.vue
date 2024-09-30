@@ -66,6 +66,7 @@ import { customerService } from '../services/customersServices';
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import * as chartConfig from './chartConfig';
+import { Frequency } from '@/models/Transactions';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -90,7 +91,17 @@ export default {
 
         const getMostFrequentProducts = async () => {
             try {
-                best_seller.value = await customerService.getMostFrequentProducts();
+                let data: Frequency[] = await customerService.getMostFrequentProducts();
+                let nameWithHighestFrequency = '';
+                let highestFrequency = -Infinity;
+
+                for (const plan of data) {
+                    if (plan.frequency > highestFrequency) {
+                        highestFrequency = plan.frequency;
+                        nameWithHighestFrequency = plan.name;
+                    }
+                }
+                best_seller.value = nameWithHighestFrequency;
             } catch (error) {
                 console.error('Error al obtener los productos más vendidos:', error);
             }

@@ -17,6 +17,7 @@ export const generalCatService = {
   },
 
   async updateCat(id: number, generalCat: GeneralCat): Promise<void> {
+    console.log(id, generalCat);
     await axios.put(`${API_URL}/${id}`, generalCat);
   },
 

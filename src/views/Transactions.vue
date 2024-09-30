@@ -121,9 +121,10 @@
     }
 
     function editTransaction(transaction: ListTransaction) {
+        // console.log(transaction.customer);
         // selectedTransactions.value = transaction;
-        // customer.value = transaction.customer.id;
-        // product.value = transaction.product.id;
+        // customer.value = transaction.customer;
+        // product.value = transaction.product;
         // type.value = transaction.type;
         // payment_method.value = transaction.payment_method;
         // amount.value = transaction.amount;
