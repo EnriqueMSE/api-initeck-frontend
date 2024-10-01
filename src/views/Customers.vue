@@ -118,14 +118,12 @@
         coordinates.value = customer.coordinates;
         product.value = customer.id_product;
         account.value = customer.id_account;
-        console.log(account.value);
     }
 
     async function editStatus(id: number, status: string) {
         try {
             if(status == "ACTIVO") status = "INACTIVO";
             else status = "ACTIVO";
-
             await customerService.editStatus(id, status);
             await getCustomers();
         } catch (error) {
@@ -172,6 +170,7 @@
         address.value = '';
         coordinates.value = '';
         product.value = 0;
+        account.value = 0;
         selectedCustomer.value = null;
     }
 
@@ -204,12 +203,12 @@
       doc.setFontSize(16);
       doc.text('Title of the PDF', 10, 30);
 
-    //   doc.text(`${customer.account}`, 10, 20);
+      doc.text(`${customer.account}`, 10, 20);
 
-      // Agregar tabla, imágenes, etc. si lo necesitas
+    //   Agregar tabla, imágenes, etc. si lo necesitas
 
       // Guardar el archivo PDF
-    //   doc.save(`${customer.contract}_${folio_date}.pdf`);
+      doc.save(`${customer.contract}_${folio_date}.pdf`);
     }
 
     function getFirstDayOfMonth(): string {
@@ -253,7 +252,6 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Email</th>
                         <th scope="col">Dirección</th>
-                        <th scope="col">Coordenadas</th>
                         <th scope="col">Producto</th>
                         <th scope="col">Estatus</th>
                         <th scope="col" class="text-center">Acciones</th>
@@ -265,7 +263,6 @@
                         <td>{{ customersList.name }}</td>
                         <td>{{ customersList.email }}</td>
                         <td>{{ customersList.address }}</td>
-                        <td>{{ customersList.coordinates }}</td>
                         <td>{{ customersList.product }}</td>
                         <td> 
                             <div data-bs-toggle="tooltip" data-bs-placement="top" title="Cambiar Estatus" ref="tooltipButton">                         
