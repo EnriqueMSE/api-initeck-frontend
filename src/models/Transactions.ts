@@ -2,9 +2,13 @@
 export interface ListTransaction {
     id?: number;
     contract: string;
+    id_customer: number;
     customer: string;
+    id_product: number;
     product: string;
+    id_type: number;
     type: string;
+    id_payment_method: number;
     payment_method: string;
     amount: number;
 }

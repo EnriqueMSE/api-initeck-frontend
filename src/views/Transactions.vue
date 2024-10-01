@@ -29,7 +29,7 @@
 
     let enforceability = ref<boolean>(false);
     // Selected customer
-    let selectedTransactions = ref<Transaction | null>(null);
+    let selectedTransactions = ref<ListTransaction | null>(null);
     // Tooltip
     const tooltipButton = ref<HTMLElement | null>(null);
     // search filter
@@ -46,7 +46,7 @@
         getProducts();
         getTransactions();
         getGeneralCat();
-        getEnforceability();
+        // getEnforceability();
     });
 
     async function handleSubmit() {
@@ -114,20 +114,20 @@
         }
     }
 
-    async function getEnforceability() {
-        let list = await transactionService.getEnforceability();
-        if (list.valueOf.length > 0) enforceability.value = false;
-        else enforceability.value = true;
-    }
+    // async function getEnforceability() {
+    //     let list = await transactionService.getEnforceability();
+    //     console.log(list);
+    //     if (list.valueOf.length > 0) enforceability.value = false;
+    //     else enforceability.value = true;
+    // }
 
     function editTransaction(transaction: ListTransaction) {
-        // console.log(transaction.customer);
-        // selectedTransactions.value = transaction;
-        // customer.value = transaction.customer;
-        // product.value = transaction.product;
-        // type.value = transaction.type;
-        // payment_method.value = transaction.payment_method;
-        // amount.value = transaction.amount;
+        selectedTransactions.value = transaction;
+        customer.value = transaction.id_customer;
+        product.value = transaction.id_product;
+        type.value = transaction.id_type;
+        payment_method.value = transaction.id_payment_method;
+        amount.value = transaction.amount;
     }
 
     async function deleteTransaction(id: number) {
